@@ -34,6 +34,7 @@
 #include "dom/text.h"
 #include "dom/undo.h"
 #include "utils/scorerw.h"
+#include "utils/scorecomp.h"
 
 using namespace mu;
 using namespace mu::engraving;
@@ -509,5 +510,34 @@ TEST_F(Engraving_LinksTests, DISABLED_testMMRestLink)
         EngravingItem* linkedItem = toEngravingItem(linkedObj);
         EXPECT_FALSE(linkedItem->visible());
     }
+    delete score;
+}
+
+TEST_F(Engraving_LinksTests, testPickupLinkedStaff) {
+
+    MasterScore* score = ScoreRW::readScore(LINKS_DATA_DIR + u"testPickupLinkedStaff.mscx");
+    ASSERT_TRUE(score);
+
+    Staff* ostaff = score->staff(0);
+    Staff* staff = ostaff->clone();
+    staff->setScore(score);
+    ASSERT_TRUE(staff->score() == score);
+
+    score->startCmd(TranslatableString::untranslatable("Engraving links tests"));
+    staff->setPart(ostaff->part());
+    score->undoInsertStaff(staff, 1);
+    Excerpt::cloneStaff(ostaff, staff);
+    score->endCmd();
+
+    EXPECT_EQ(score->staves().size(), 2);
+
+    String outputPath = u"testPickupLinkedStaffCloned.mscx";
+
+    String referencePath = LINKS_DATA_DIR + u"testPickupLinkedStaff-ref.mscx";
+
+    bool saveAndCompare = ScoreComp::saveCompareScore(score, outputPath, referencePath);
+
+    EXPECT_TRUE(saveAndCompare);
+
     delete score;
 }
