@@ -530,6 +530,10 @@ TEST_F(Engraving_LinksTests, testPickupLinkedStaff) {
 
     EXPECT_EQ(score->staves().size(), 2);
 
+    bool save = ScoreRW::saveScore(score, ScoreRW::rootPath() + u"/" + LINKS_DATA_DIR + u"testPickupLinkedStaff-ref.mscx");
+
+    EXPECT_TRUE(save);
+
     String outputPath = u"testPickupLinkedStaffCloned.mscx";
 
     String referencePath = LINKS_DATA_DIR + u"testPickupLinkedStaff-ref.mscx";
