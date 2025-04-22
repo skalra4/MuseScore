@@ -514,7 +514,6 @@ TEST_F(Engraving_LinksTests, DISABLED_testMMRestLink)
 }
 
 TEST_F(Engraving_LinksTests, testPickupLinkedStaff) {
-
     MasterScore* score = ScoreRW::readScore(LINKS_DATA_DIR + u"testPickupLinkedStaff.mscx");
     ASSERT_TRUE(score);
 
