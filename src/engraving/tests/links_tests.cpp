@@ -514,6 +514,19 @@ TEST_F(Engraving_LinksTests, DISABLED_testMMRestLink)
 }
 
 TEST_F(Engraving_LinksTests, testPickupLinkedStaff) {
+
+    // Read test score file in
+    MasterScore* score = ScoreRW::readScore(LINKS_DATA_DIR + u"testPickupLinkedStaff.mscx");
+    ASSERT_TRUE(score);
+
+    // Create an original staff and a clone of that staff
+    Staff* ostaff = score->staff(0);
+    Staff* staff = ostaff->clone();
+    // Set the cloned staff to same score
+    staff->setScore(score);
+    ASSERT_TRUE(staff->score() == score);
+
+    // Start the score process of adding a linked staff
     MasterScore* score = ScoreRW::readScore(LINKS_DATA_DIR + u"testPickupLinkedStaff.mscx");
     ASSERT_TRUE(score);
 
@@ -528,16 +541,14 @@ TEST_F(Engraving_LinksTests, testPickupLinkedStaff) {
     Excerpt::cloneStaff(ostaff, staff);
     score->endCmd();
 
+    // Check number of staves
     EXPECT_EQ(score->staves().size(), 2);
-
-    //bool save = ScoreRW::saveScore(score, ScoreRW::rootPath() + u"/" + LINKS_DATA_DIR + u"testPickupLinkedStaff-ref.mscx");
-
-    //EXPECT_TRUE(save);
 
     String outputPath = u"testPickupLinkedStaffCloned.mscx";
 
     String referencePath = LINKS_DATA_DIR + u"testPickupLinkedStaff-ref.mscx";
 
+    // Save Cloned staff file, and compare with reference file
     bool saveAndCompare = ScoreComp::saveCompareScore(score, outputPath, referencePath);
 
     EXPECT_TRUE(saveAndCompare);
