@@ -525,15 +525,6 @@ TEST_F(Engraving_LinksTests, testPickupLinkedStaff) {
     staff->setScore(score);
     ASSERT_TRUE(staff->score() == score);
 
-    // Start the score process of adding a linked staff
-    MasterScore* score = ScoreRW::readScore(LINKS_DATA_DIR + u"testPickupLinkedStaff.mscx");
-    ASSERT_TRUE(score);
-
-    Staff* ostaff = score->staff(0);
-    Staff* staff = ostaff->clone();
-    staff->setScore(score);
-    ASSERT_TRUE(staff->score() == score);
-
     score->startCmd(TranslatableString::untranslatable("Engraving links tests"));
     staff->setPart(ostaff->part());
     score->undoInsertStaff(staff, 1);
